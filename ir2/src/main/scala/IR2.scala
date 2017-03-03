@@ -4,7 +4,29 @@ import ir2.Common._
 import java.lang.Math._
 
 object IR2 {
+  var points: List[Point] = Nil
+  var ellipse: Ellipse = Ellipse(Point(0, 0), 0, 1)
+
   def main(args: Array[String]): Unit = {
+    // #paint
+    calculate
+    Graph.paint(points)
+    Graph.paint(ellipse)
+
+    // #result
+    (30 to 100 by 10).foreach(N => {
+      (100 to 1000 by 100).foreach(M => {
+        Common.n = N
+        Common.m = M
+        val newPoint = generate(m)
+        calculate
+
+      })
+    })
+
+  }
+
+  def calculate = {
     var points: List[Point] = generate(n)
 
     val Pk: Point = searchPkPl(points)._1
@@ -23,22 +45,51 @@ object IR2 {
 
     val P1: Point = crossingLines(L1, L3)
     val P2: Point = crossingLines(L1, L4)
-    val P3: Point = crossingLines(L2, L3)
-    val P4: Point = crossingLines(L2, L4)
+    val P3: Point = crossingLines(L2, L4)
+    val P4: Point = crossingLines(L2, L3)
 
     val a: Double = distance(P1, P2) min distance(P1, P4)
     val b: Double = distance(P1, P2) max distance(P1, P4)
 
-//    points = transferPoints(points, P1)
-//    points = turnPoints(points, atan(-L1.ax/L1.by))
+    val transferPoint = {
+      var min = distance(P1, Point(0, 0))
+      var point = P1
+      if (min > distance(P2, Point(0, 0))) {
+        min = distance(P2, Point(0, 0));
+        point = P2
+      }
+      if (min > distance(P3, Point(0, 0))) {
+        min = distance(P3, Point(0, 0));
+        point = P3
+      }
+      if (min > distance(P4, Point(0, 0))) {
+        min = distance(P4, Point(0, 0));
+        point = P4
+      }
+      point
+    }
+    val angle = if (transferPoint.y > 0) PI / 2 - atan(-L1.ax / L1.by max -L3.ax / L3.by)
+    else PI * 2 - atan(-L1.ax / L1.by max -L3.ax / L3.by)
 
-    Graph.paint(L1)
-    Graph.paint(L2)
-    Graph.paint(L3)
-    Graph.paint(L4)
-    Graph.paint(points)
+    points = transferPoints(points, transferPoint)
+    points = turnPoints(points, angle)
 
+    val coef = {
+      val minX = points.map(p => p.x).min
+      val maxX = points.map(p => p.x).max
+      val minY = points.map(p => p.y).min
+      val maxY = points.map(p => p.y).max
+      if (maxX - minX > maxY - minX) a / b
+      else b / a
+    }
+    points = points.map(p => Point(p.x * coef, p.y))
 
+    val center: Point = if (coef == a / b) Point(a / 2, a / 2) else Point(b / 2, b / 2)
+    val R: Double = points.map(p => distance(p, center)).max
+    points = points.map(p => Point(p.x / coef, p.y))
+
+    IR2.points = points
+    IR2.ellipse = Ellipse(center, R, 1 / coef)
   }
 
 }

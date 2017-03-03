@@ -6,9 +6,13 @@ case class Point(x: Double, y: Double)
 
 case class Line(ax: Double, by: Double, c: Double)
 
+case class Circle(center: Point, R: Double)
+
+case class Ellipse(center: Point, R: Double, coef: Double)
+
 object Common {
-  val n = 30
-  val m = 100
+  var n = 30
+  var m = 100
 
 
   def generate(n: Int): List[Point] = {
@@ -16,7 +20,7 @@ object Common {
   }
 
   def searchL(p1: Point, p2: Point): Line =
-    Line(ax = 1 / (p2.x - p1.x), by = 1 / (p1.y - p2.y), c = p1.y / (p2.y - p1.y) - p1.x / (p2.x - p1.x))
+    Line(ax = 1.0 / (p2.x - p1.x), by = 1.0 / (p1.y - p2.y), c = p1.y / (p2.y - p1.y) - p1.x / (p2.x - p1.x))
 
   def distance(line: Line, point: Point): Double =
     abs(line.ax * point.x + line.by * point.y + line.c) / sqrt(line.ax * line.ax + line.by * line.by)
@@ -32,7 +36,7 @@ object Common {
     points.map(p => Point(p.x - point.x, p.y - point.y))
 
   def turnPoints(points: List[Point], angle: Double): List[Point] =
-    points.map(p => Point(x = p.x*cos(angle) - p.y*sin(angle), y = p.x*sin(angle) + p.y*cos(angle)))
+    points.map(p => Point(x = p.x * cos(angle) - p.y * sin(angle), y = p.x * sin(angle) + p.y * cos(angle)))
 
   def searchPkPl(points: List[Point]): (Point, Point) = {
     var max: Double = 0.0
