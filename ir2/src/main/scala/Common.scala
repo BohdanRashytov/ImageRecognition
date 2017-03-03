@@ -11,7 +11,7 @@ case class Circle(center: Point, R: Double)
 case class Ellipse(center: Point, R: Double, coef: Double)
 
 object Common {
-  var n = 30
+  var n = 100
   var m = 100
 
 

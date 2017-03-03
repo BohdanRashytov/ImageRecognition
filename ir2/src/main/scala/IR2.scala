@@ -1,11 +1,17 @@
 package ir2
 
+import java.io.{BufferedWriter, FileWriter}
+
 import ir2.Common._
 import java.lang.Math._
 
 object IR2 {
   var points: List[Point] = Nil
   var ellipse: Ellipse = Ellipse(Point(0, 0), 0, 1)
+
+  val outputPath = "Output.txt"
+  val writer = new FileWriter(outputPath)
+  val bufferWriter = new BufferedWriter(writer)
 
   def main(args: Array[String]): Unit = {
     // #paint
@@ -14,16 +20,22 @@ object IR2 {
     Graph.paint(ellipse)
 
     // #result
+    bufferWriter.write("N\t\t\tM\t\t\tP\t\t\t\tF\n")
     (30 to 100 by 10).foreach(N => {
       (100 to 1000 by 100).foreach(M => {
         Common.n = N
         Common.m = M
         val newPoint = generate(m)
         calculate
-
+        val count = newPoint.map(p => (p.x / ellipse.coef - ellipse.center.x) * (p.x / ellipse.coef - ellipse.center.x) +
+          (p.y - ellipse.center.y) * (p.y - ellipse.center.y) < ellipse.R * ellipse.R).count(b => b)
+        val p = ((1.0 * (n - 1) / (n + 1) * 1000).toInt * 1.0) / 1000.0
+        val f = ((1.0 * count / m * 1000).toInt * 1.0) / 1000.0
+        if (m != 1000) bufferWriter.write(s"$n\t\t\t$m\t\t\t$p\t\t\t$f\n")
+        else bufferWriter.write(s"$n\t\t\t$m\t\t$p\t\t\t$f\n")
       })
     })
-
+    bufferWriter.flush()
   }
 
   def calculate = {
