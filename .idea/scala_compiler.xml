@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="SBT 1" modules="imagerecognition,root,ir1,ir2" />
+    <profile name="SBT 1" modules="imagerecognition,root,ir1,ir2,ir3_8" />
   </component>
 </project>
