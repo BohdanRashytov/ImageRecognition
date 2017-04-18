@@ -19,36 +19,36 @@ object SoftSVM {
     val J = new Matrix(N - 1, N - 1)
 
     (0 to N - 2).foreach(i => {
-      (0 to N-2).foreach(j => {
+      (0 to N - 2).foreach(j => {
         if (i == j) {
-          J.set(i, j, K(X(i), X(j)) + Kronecker(i,j) / C)
+          J.set(i, j, K(X(i), X(j)) + Kronecker(i, j) / C)
         } else {
-          J.set(i, j, W(i)* W(j)*(K(X(i), X(j)) + Kronecker(i,j) / C) -
-            W(i)* W(j)*(K(X(i), X(N-1)) + Kronecker(i,N-1) / C))
+          J.set(i, j, W(i) * W(j) * (K(X(i), X(j)) + Kronecker(i, j) / C) -
+            W(i) * W(j) * (K(X(i), X(N - 1)) + Kronecker(i, N - 1) / C))
         }
       })
     })
 
-    val B = new Matrix((0 to N - 2).map(i => 1.0 + W(i)*W(N-1)*(K(X(i), X(N-1))+ Kronecker(i,N-1) / C)).toArray)
+    val B = new Matrix((0 to N - 2).map(i => 1.0 + W(i) * W(N - 1) * (K(X(i), X(N - 1)) + Kronecker(i, N - 1) / C)).toArray)
 
     val extraL = (J.inverse() times B.transpose()).transpose().getArray()(0).map(l => if (l < 0) 0.0 else l)
     val L = new Array[Double](extraL.length + 1)
     (0 to L.length - 1).foreach(i => {
-      if (i == L.length - 1) L.update(i, - (0 to extraL.length - 1).map(k => extraL(k)*W(k)).sum * W(i))
+      if (i == L.length - 1) L.update(i, -(0 to extraL.length - 1).map(k => extraL(k) * W(k)).sum * W(i))
       else L.update(i, extraL(i))
     })
 
-    val k = (0 to X.length - 1).filterNot(_==0.0).head
-    val b = W(k) - (0 to X.length - 1).map(i => L(i)*W(i)*(K(X(i), X(k)) + Kronecker(i, k)/C)).sum
+    val k = (0 to X.length - 1).filterNot(_ == 0.0).head
+    val b = W(k) - (0 to X.length - 1).map(i => L(i) * W(i) * (K(X(i), X(k)) + Kronecker(i, k) / C)).sum
 
     val x = experiment.cell.observations.toArray
-    val g: Double = (0 to X.length - 1).map(i => L(i)*W(i)*K(X(i), x)).sum + b
+    val g: Double = (0 to X.length - 1).map(i => L(i) * W(i) * K(X(i), x)).sum + b
 
     experiment.copy(diagnosis = Some(if (g > 0) Cancer else Fibroadenomatosis))
   }
 
-  def K (arrayOne: Array[Double], arrayTwo: Array[Double]): Double =
-    Math.pow((0 to arrayOne.length - 1).foldLeft(0.0)((s, i) => s + arrayOne(i)*arrayTwo(i)) + 1, d)
+  def K(arrayOne: Array[Double], arrayTwo: Array[Double]): Double =
+    Math.pow((0 to arrayOne.length - 1).foldLeft(0.0)((s, i) => s + arrayOne(i) * arrayTwo(i)) + 1, d)
 
   def Kronecker(i: Int, j: Int): Double = if (i == j) 1.0 else 0.0
 
