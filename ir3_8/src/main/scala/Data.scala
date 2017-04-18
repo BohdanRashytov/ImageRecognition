@@ -7,6 +7,7 @@ import ir3_8.Common._
 object Data {
 
   private case class CellInfo(number: Int = 0, observations: List[Double] = List())
+
   private case class PatientInfo(count: Int = 0, cells: List[CellInfo] = List())
 
   private val folderALLD2 = "DIAG/ALLD2/"
@@ -28,7 +29,7 @@ object Data {
   }
 
   private def readLine(line: String): CellInfo = {
-    val elements = line.replace("\t", " ").split(" ").toList.distinct.filterNot(_.isEmpty)
+    val elements = line.replace("\t", " ").split(" ").toList.filterNot(_.isEmpty)
     CellInfo(elements.head.toInt, elements.tail.map(readNumber(_)))
   }
 
@@ -47,6 +48,6 @@ object Data {
 
   val cells: List[Cell] = {
     concatALLD2.values.flatMap(pi => pi.cells.map(ci => ci.observations)).map(list => Cell(Cancer, list)).toList :::
-    concatALLD3.values.flatMap(pi => pi.cells.map(ci => ci.observations)).map(list => Cell(Fibroadenomatosis, list)).toList
+      concatALLD3.values.flatMap(pi => pi.cells.map(ci => ci.observations)).map(list => Cell(Fibroadenomatosis, list)).toList
   }
 }
