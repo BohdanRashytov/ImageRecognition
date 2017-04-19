@@ -14,11 +14,22 @@ object Common {
 
   val experiments = Data.cells.map(cell => Experiment(cell, Data.cells.filterNot(_.eq(cell)), None))
 
-  def accuracyCalculate(experiments: List[Experiment], method: Experiment => Experiment): Double = {
+  def accuracyCalculate(experiments: List[Experiment], method: Experiment => Experiment): (Double, Double, Double) = {
     val completedExperiment = experiments.map(method)
-    val successful = completedExperiment.count(e => e.diagnosis.get == e.cell.diagnosis)
-    val all = experiments.size
-    val accuracy = 1.0 * successful / all
-    accuracy
+
+    val N = completedExperiment.count(_.cell.diagnosis == Fibroadenomatosis)
+    val P = completedExperiment.count(_.cell.diagnosis == Cancer)
+
+    val TN = completedExperiment.count(e => (e.cell.diagnosis == Fibroadenomatosis && e.diagnosis == Some(Fibroadenomatosis)))
+    val TP = completedExperiment.count(e => (e.cell.diagnosis == Cancer && e.diagnosis == Some(Cancer)))
+
+    val FP = P - TP
+    val FN = N - TN
+
+    val TPR = 1.0 * TP / P
+    val TNR = 1.0 * TN / N
+    val PR = 1.0 * (TP + TN) / (P + N)
+
+    (TPR, TNR, PR)
   }
 }
