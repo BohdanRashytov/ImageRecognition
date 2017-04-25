@@ -1,8 +1,9 @@
-package ir3_8
+package ir6_8
 
 import java.io.{BufferedReader, FileReader}
 import java.lang.Math._
-import ir3_8.Common._
+
+import ir6_8.Common._
 
 object Data {
 

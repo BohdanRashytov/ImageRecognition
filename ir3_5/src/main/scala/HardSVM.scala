@@ -1,7 +1,7 @@
-package ir3_8
+package ir3_5
 
 import Jama.Matrix
-import ir3_8.Common.{Cancer, Experiment, Fibroadenomatosis}
+import ir3_5.Common.{Cancer, Experiment, Fibroadenomatosis}
 
 object HardSVM {
 

@@ -1,4 +1,4 @@
-package ir3_8
+package ir6_8
 
 object Common {
 
@@ -7,6 +7,8 @@ object Common {
   case object Cancer extends Diagnosis
 
   case object Fibroadenomatosis extends Diagnosis
+
+  case object Indeterminately extends Diagnosis
 
   case class Cell(diagnosis: Diagnosis = Fibroadenomatosis, observations: List[Double] = List())
 
@@ -22,9 +24,6 @@ object Common {
 
     val TN = completedExperiment.count(e => (e.cell.diagnosis == Fibroadenomatosis && e.diagnosis == Some(Fibroadenomatosis)))
     val TP = completedExperiment.count(e => (e.cell.diagnosis == Cancer && e.diagnosis == Some(Cancer)))
-
-    val FP = P - TP
-    val FN = N - TN
 
     val TPR = 1.0 * TP / P
     val TNR = 1.0 * TN / N

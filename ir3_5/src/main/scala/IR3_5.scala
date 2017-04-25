@@ -1,6 +1,6 @@
-package ir3_8
+package ir3_5
 
-object IR3_8 {
+object IR3_5 {
 
   def main(args: Array[String]): Unit = {
     println("---------------------------------------------------------------------------------------------------------")
