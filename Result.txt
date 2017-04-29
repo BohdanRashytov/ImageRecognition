@@ -1,4 +1,8 @@
-         TPR      TNR      PR
-Fisher:  0.76     0.47     0.65
-HardSVM: 0.55     0.59     0.57
-SoftSVM: 0.43     0.69     0.53 // C = 0.01
+                    TPR                     TNR      PR
+Fisher:             0.76                    0.47     0.65
+HardSVM:            0.55                    0.59     0.57
+SoftSVM:            0.43                    0.69     0.53 // C = 0.01
+
+Petunin:            0.97                    0.03    0.61
+PetuninFirstRank:   0.9934578415136489      0.01    0.6153911845730028
+PetuninSecondRank:  0.9988826815642458      0.01    0.6157024793388429
